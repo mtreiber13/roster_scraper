@@ -1,0 +1,21 @@
+.Header {
+	color: white;
+	min-height: 50vh;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	font-size: calc(10px + 2vmin);
+}
+
+.Header-name {
+	font-size: calc(10px + 1vmin);
+}
+
+#img {
+	height: 250px;
+	/*max-width: 300px;*/
+    /*height:auto;*/
+    width: auto;
+  	pointer-events: none;
+}
