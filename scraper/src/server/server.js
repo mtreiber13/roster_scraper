@@ -39,9 +39,11 @@ exports.__esModule = true;
 var express = require("express");
 var pup = require("../web_crawler/pupFunctions");
 var bodyParser = require('body-parser');
+var cors = require("cors");
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+app.use(cors());
 app.get("/", function (req, res) {
     console.log("responding to root get");
     res.send("API is working at root");
