@@ -21,7 +21,7 @@ class Header extends React.Component<HeaderElems, {}> {
 	        {name}
 	      </div>
 	      <div className="Header-logo">
-	        <img id="img" src={logo}/>
+	        <img id="img" alt="me playing" src={logo}/>
 	      </div>
 	    </div>
 	  );
