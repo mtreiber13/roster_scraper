@@ -17,12 +17,10 @@ class Form extends React.Component<{}, {value:string}> {
 	}
 
 	async scrape () {
-		console.log("_____________________________________")
-		console.log("STATE = " + JSON.stringify(this.state))
 		await fetch('http://localhost:2999/start_scrape', {
   			method: 'POST',
-  			mode: 'no-cors',
   			headers: {
+  				'Access-Control-Allow-Origin': '*',
   				'Accept': 'application/json',
     			'Content-Type': 'application/json'
   			},
@@ -38,6 +36,7 @@ class Form extends React.Component<{}, {value:string}> {
 	}
 
 	async handleSubmit(event:any) {
+		event.persist()
 		console.log(this.state)
 		await this.scrape()
     	event.preventDefault();
