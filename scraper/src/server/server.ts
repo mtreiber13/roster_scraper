@@ -2,6 +2,7 @@ const express = require("express");
 const pup = require("../web_crawler/pupFunctions")
 const bodyParser = require('body-parser');
 const cors = require("cors")
+const scraper = require("../web_crawler/siteScraper")
 
 
 const app = express()
@@ -21,6 +22,11 @@ app.post("/start_scrape", async (req:any, res:any) => {
 	const [browser, page] = await pup.setUp(pup.options)
 	try {
 		await pup.goTo(page, url)
+		await page.waitFor(40000)
+		let links:string [] = await scraper.getSportLinks(page)
+		console.log("GOT LINKS")
+		await page.waitFor(40000)
+		res.send(links)
 	} catch (err) {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
 	}

@@ -40,6 +40,7 @@ var express = require("express");
 var pup = require("../web_crawler/pupFunctions");
 var bodyParser = require('body-parser');
 var cors = require("cors");
+var scraper = require("../web_crawler/siteScraper");
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -49,32 +50,38 @@ app.get("/", function (req, res) {
     res.send("API is working at root");
 });
 app.post("/start_scrape", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, _a, browser, page, err_1;
+    var url, _a, browser, page, links, err_1;
     return __generator(this, function (_b) {
         switch (_b.label) {
             case 0:
-                console.log("responding to /start_scrape post");
-                console.log("BODY = " + JSON.stringify(req.body));
                 url = req.body.value;
                 return [4 /*yield*/, pup.setUp(pup.options)];
             case 1:
                 _a = _b.sent(), browser = _a[0], page = _a[1];
                 _b.label = 2;
             case 2:
-                _b.trys.push([2, 4, , 5]);
-                console.log("TRYING again");
-                console.log(url);
+                _b.trys.push([2, 7, , 8]);
                 return [4 /*yield*/, pup.goTo(page, url)];
             case 3:
                 _b.sent();
-                res.send("SUCCESS: navigated to " + url + "\n");
-                return [3 /*break*/, 5];
+                return [4 /*yield*/, page.waitFor(40000)];
             case 4:
+                _b.sent();
+                return [4 /*yield*/, scraper.getSportLinks(page)];
+            case 5:
+                links = _b.sent();
+                console.log("GOT LINKS");
+                return [4 /*yield*/, page.waitFor(40000)];
+            case 6:
+                _b.sent();
+                res.send(links);
+                return [3 /*break*/, 8];
+            case 7:
                 err_1 = _b.sent();
                 res.send("ERROR: " + err_1 + "\nBAD URL = " + url + "\n");
-                return [3 /*break*/, 5];
-            case 5: return [4 /*yield*/, pup.shutDown(browser)];
-            case 6:
+                return [3 /*break*/, 8];
+            case 8: return [4 /*yield*/, pup.shutDown(browser)];
+            case 9:
                 _b.sent();
                 return [2 /*return*/];
         }
@@ -82,5 +89,5 @@ app.post("/start_scrape", function (req, res) { return __awaiter(void 0, void 0,
 }); });
 app.set('port', process.env.PORT || 2999);
 app.listen(2999, function () {
-    console.log("server is running");
+    console.log("++ Server is running");
 });

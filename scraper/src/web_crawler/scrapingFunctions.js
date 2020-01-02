@@ -36,70 +36,110 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var pup = require("./pupFunctions");
 var cheerio = require("cheerio");
-function getHTML(page) {
+var request = require("request");
+var cheer = require("./cheerioLib.js");
+//--------------------------- core functions ----------------------------
+function createValidUrl(url) {
     return __awaiter(this, void 0, void 0, function () {
+        var newUrl;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, page.evaluate(function () { return document.body.innerHTML; })];
-                case 1: return [2 /*return*/, _a.sent()];
+                case 0: return [4 /*yield*/, cheer.getResponseHref(url)];
+                case 1:
+                    newUrl = _a.sent();
+                    return [2 /*return*/, (newUrl + "?&print=true")];
             }
         });
     });
 }
-function getUrls(rawHTML) {
+//--------------------------- for overall college ----------------------------
+function findTeamUrls(rawHTML) {
     var $ = cheerio.load(rawHTML);
     var teams = $('a[href*="/roster.aspx?path="]');
-    // console.log(teams)
     return teams;
 }
-function run() {
+function getTeamPages(url) {
     return __awaiter(this, void 0, void 0, function () {
-        var _a, browser, page, rawHTML, hrefJSON, urls, key, url;
-        return __generator(this, function (_b) {
-            switch (_b.label) {
-                case 0: return [4 /*yield*/, pup.setUp(pup.options)];
+        var goodUrl, raw, hrefJSON, urls, key, path;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, createValidUrl(url)];
                 case 1:
-                    _a = _b.sent(), browser = _a[0], page = _a[1];
-                    return [4 /*yield*/, pup.goTo(page, "https://nusports.com/")];
+                    goodUrl = _a.sent();
+                    return [4 /*yield*/, cheer.getRawHTML(goodUrl)];
                 case 2:
-                    _b.sent();
-                    return [4 /*yield*/, getHTML(page)];
-                case 3:
-                    rawHTML = _b.sent();
-                    hrefJSON = getUrls(rawHTML);
+                    raw = _a.sent();
+                    hrefJSON = findTeamUrls(raw);
                     urls = [];
                     for (key in hrefJSON) {
                         try {
-                            url = hrefJSON[key]['attribs']['href'];
-                            if (url != undefined) {
-                                urls.push("https://gofrogs.com" + url);
+                            path = hrefJSON[key]['attribs']['href'];
+                            if (path != undefined) {
+                                urls.push(url + path);
                             }
                         }
-                        catch (_c) {
+                        catch (_b) {
                         }
                     }
-                    return [4 /*yield*/, pup.shutDown(browser)];
-                case 4:
-                    _b.sent();
                     return [2 /*return*/, urls];
             }
         });
     });
 }
-function runner() {
+//--------------------------- for specific rosters ----------------------------
+function scrapeRosterGrid(url, numColumns) {
     return __awaiter(this, void 0, void 0, function () {
-        var result;
+        var goodUrl, raw, $, rows, players;
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0: return [4 /*yield*/, run()];
+                case 0: return [4 /*yield*/, createValidUrl(url)];
+                case 1:
+                    goodUrl = _a.sent();
+                    return [4 /*yield*/, cheer.getRawHTML(goodUrl)
+                        // console.log(raw)
+                    ];
+                case 2:
+                    raw = _a.sent();
+                    $ = cheer.createCheerio(raw);
+                    console.log($);
+                    rows = $('table').find('tr');
+                    players = [];
+                    rows.each(function (index, value) {
+                        console.log($(this).text());
+                        var data = [];
+                        var children = $(this).children();
+                        for (var i = 0; i < children.length; i++) {
+                            data.push($(children[i]).text());
+                        }
+                        players.push(data);
+                    });
+                    return [2 /*return*/, players.filter(function (p) { return (p.length == 9); })];
+            }
+        });
+    });
+}
+//--------------------------- for testing purposes ----------------------------
+function runner() {
+    return __awaiter(this, void 0, void 0, function () {
+        var result, result2;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, getTeamPages("https://purduesports.com/")];
                 case 1:
                     result = _a.sent();
                     console.log(result);
+                    return [4 /*yield*/, scrapeRosterGrid(result[0], 10)];
+                case 2:
+                    result2 = _a.sent();
+                    console.log(result2);
                     return [2 /*return*/];
             }
         });
     });
 }
 runner();
+module.exports = {
+    getTeamPages: getTeamPages, scrapeRosterGrid: scrapeRosterGrid,
+    createValidUrl: createValidUrl, findTeamUrls: findTeamUrls
+};
