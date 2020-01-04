@@ -1,23 +1,34 @@
 import * as React from 'react';
-// import axios from 'axios';
 import "./Form.css"
+import TableContainer from "./TableContainer"
 
 
-export interface FormFields {
-	url: string
+
+export interface formState {
+	value: string;
+	showData: boolean;
+	teamUrls: string[];
 }
 
-class Form extends React.Component<{}, {value:string}> {
+export interface scrapeResponse {
+	data:string[][][];
+}
+
+class Form extends React.Component<{}, formState> {
 	constructor(props:any) {
 	  	super(props);
-	  	this.state = {value: ''}
+	  	this.state = {
+	  		value: '',
+	  		showData: false,
+	  		teamUrls: []
+	  	}
 	  	this.handleChange = this.handleChange.bind(this);
 	  	this.handleSubmit = this.handleSubmit.bind(this);
 	  	this.scrape = this.scrape.bind(this);
 	}
 
 	async scrape () {
-		await fetch('http://localhost:2999/start_scrape', {
+		await fetch('http://localhost:2999/get_teams', {
   			method: 'POST',
   			headers: {
   				'Access-Control-Allow-Origin': '*',
@@ -26,33 +37,51 @@ class Form extends React.Component<{}, {value:string}> {
   			},
   			body: JSON.stringify({"value": this.state.value})
   		})
-  			.then((response) => console.log('sent url...'))
+  			.then(async (response) => {
+  				if (response.ok) {
+  					await response.json().then(json => {
+  						this.setState({
+  							showData: true,
+  							teamUrls: json.teams
+  						})
+  					})
+  				}
+  			})
 			.catch((e) => console.log("ERROR: " + e))
 	}
 
 	handleChange(event:any) {
 		this.setState({value: event.target.value});
-		console.log(this.state)
+
+		// console.log(this.state)
 	}
 
 	async handleSubmit(event:any) {
 		event.persist()
-		console.log(this.state)
-		await this.scrape()
-    	event.preventDefault();
+		event.preventDefault();
+		await this.scrape();
 	}
+
+
 	render() {	
 		return(
-			<div className="Form">
-				<form onSubmit={this.handleSubmit}>
-		        	<p>Enter the school's athletics URL:</p>
-		        	<input type="text" value={this.state.value} onChange={this.handleChange} />
-		        	<br></br>
-		        	<input type="submit" value="Submit"/>
-		      	</form>
-		    </div>
+			<div className="FormData">
+				<div className="Form">
+					<form onSubmit={this.handleSubmit}>
+			        	<p>Enter the school's athletics URL:</p>
+			        	<input type="text" value={this.state.value} onChange={this.handleChange} />
+			        	<br></br>
+			        	<input type="submit" value="Submit"/>
+			      	</form>
+			    </div>
+			    <div className="Tables">
+			    	{ this.state.showData ? <TableContainer urls={this.state.teamUrls}/> : null }
+			    </div>
+			</div>
 		);
 	}
 }
+
+
 
 export default Form;

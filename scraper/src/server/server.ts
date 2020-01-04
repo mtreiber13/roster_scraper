@@ -2,7 +2,7 @@ const express = require("express");
 const pup = require("../web_crawler/pupFunctions")
 const bodyParser = require('body-parser');
 const cors = require("cors")
-const scraper = require("../web_crawler/siteScraper")
+const scraper = require("../web_crawler/scrapingFunctions")
 
 
 const app = express()
@@ -17,22 +17,31 @@ app.get("/", (req:any, res:any) => {
 	res.send("API is working at root")
 });
 
-app.post("/start_scrape", async (req:any, res:any) => {
+
+interface teamsObj {
+	[key:string]: string[]
+}
+
+app.post("/get_teams", async (req:any, res:any) => {
 	const url = req.body.value
-	const [browser, page] = await pup.setUp(pup.options)
 	try {
-		await pup.goTo(page, url)
-		await page.waitFor(40000)
-		let links:string [] = await scraper.getSportLinks(page)
-		console.log("GOT LINKS")
-		await page.waitFor(40000)
-		res.send(links)
+		let teamLinks:string[] = await scraper.getTeamPages(url)
+		console.log("++ Finished /get_teams API call")
+		res.json({"teams": teamLinks})
 	} catch (err) {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
 	}
-	
-	await pup.shutDown(browser)
-	
+})
+
+app.post("/get_roster_data", async (req:any, res:any) => {
+	const url = req.body.value
+	try{
+		let rosterData:string[][] = await scraper.scrapeRosterGrid(url)
+		console.log("++ Finished /get_roster_data API call")
+		res.json({"data": rosterData})
+	} catch (err) {
+		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
+	}
 })
 
 app.set('port', process.env.PORT || 2999);

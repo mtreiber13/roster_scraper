@@ -1,0 +1,15 @@
+table, th, tr, td {
+	/*border-collapse: collapse;*/
+	color: black;
+	background-color: white;
+	border: 1px solid black;
+	width:90%; 
+    margin-left:5%; 
+    margin-right:5%;
+    table-layout: fixed;
+}
+
+
+/*.Headers {
+  border: 1px solid black;
+}*/

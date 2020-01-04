@@ -89,6 +89,7 @@ function getTeamPages(url) {
 }
 //--------------------------- for specific rosters ----------------------------
 function scrapeRosterGrid(url, numColumns) {
+    if (numColumns === void 0) { numColumns = 4; }
     return __awaiter(this, void 0, void 0, function () {
         var goodUrl, raw, $, rows, players;
         return __generator(this, function (_a) {
@@ -96,17 +97,13 @@ function scrapeRosterGrid(url, numColumns) {
                 case 0: return [4 /*yield*/, createValidUrl(url)];
                 case 1:
                     goodUrl = _a.sent();
-                    return [4 /*yield*/, cheer.getRawHTML(goodUrl)
-                        // console.log(raw)
-                    ];
+                    return [4 /*yield*/, cheer.getRawHTML(goodUrl)];
                 case 2:
                     raw = _a.sent();
                     $ = cheer.createCheerio(raw);
-                    console.log($);
                     rows = $('table').find('tr');
                     players = [];
                     rows.each(function (index, value) {
-                        console.log($(this).text());
                         var data = [];
                         var children = $(this).children();
                         for (var i = 0; i < children.length; i++) {
@@ -114,31 +111,11 @@ function scrapeRosterGrid(url, numColumns) {
                         }
                         players.push(data);
                     });
-                    return [2 /*return*/, players.filter(function (p) { return (p.length == 9); })];
+                    return [2 /*return*/, players.filter(function (p) { return (p.length >= numColumns); })];
             }
         });
     });
 }
-//--------------------------- for testing purposes ----------------------------
-function runner() {
-    return __awaiter(this, void 0, void 0, function () {
-        var result, result2;
-        return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0: return [4 /*yield*/, getTeamPages("https://purduesports.com/")];
-                case 1:
-                    result = _a.sent();
-                    console.log(result);
-                    return [4 /*yield*/, scrapeRosterGrid(result[0], 10)];
-                case 2:
-                    result2 = _a.sent();
-                    console.log(result2);
-                    return [2 /*return*/];
-            }
-        });
-    });
-}
-runner();
 module.exports = {
     getTeamPages: getTeamPages, scrapeRosterGrid: scrapeRosterGrid,
     createValidUrl: createValidUrl, findTeamUrls: findTeamUrls

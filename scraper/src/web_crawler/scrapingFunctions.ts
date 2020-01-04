@@ -34,17 +34,13 @@ async function getTeamPages(url:string) {
 }
 
 //--------------------------- for specific rosters ----------------------------
-async function scrapeRosterGrid(url:string, numColumns:number) {
+async function scrapeRosterGrid(url:string, numColumns:number=4) {
 	let goodUrl = await createValidUrl(url)
 	let raw = await cheer.getRawHTML(goodUrl)
-	// console.log(raw)
 	let $ = cheer.createCheerio(raw)
-	console.log($)
 	let rows = $('table').find('tr')
-
 	let players:any[] = []
-	rows.each(function (index:number, value:any) {
-		console.log($(this).text())
+	rows.each(function (this:CheerioElement, index:number, value:any) {
 		let data:string[] = []
 		let children:any = $(this).children()
 		for (let i = 0; i < children.length; i++) {
@@ -52,23 +48,10 @@ async function scrapeRosterGrid(url:string, numColumns:number) {
 		}
 		players.push(data)
 	})
-	return players.filter( (p) => (p.length == numColumns));
+	return players.filter( (p) => (p.length >= numColumns));
 }
 
 
-
-//--------------------------- for testing purposes ----------------------------
-async function runner() {
-	let result = await getTeamPages("https://purduesports.com/")
-	console.log(result)
-	let result2 = await scrapeRosterGrid(result[0], 9)
-	console.log(result2)
-	
-}
-
-
-
-runner()
 
 module.exports = {
 	getTeamPages, 			scrapeRosterGrid,
