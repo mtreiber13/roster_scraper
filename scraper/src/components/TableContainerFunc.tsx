@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Table from "./Table"
+import Button from "./Button"
 
 export interface containerState {
 	urls: string[];
@@ -9,17 +9,18 @@ export interface containerProps {
 	urls: string[];
 }
 
-function TableContainer (props:containerProps) {
-	const [state, setState] = useState<containerState>({ 
-      		urls: props.urls
-      })
-
+function TableContainerFunc (props:string[]) {
+	
+	const [state, setState] = useState<containerState>({
+		urls: props
+	})
+	console.log(props)
 	return (
 		<div className="TableContainer">
-			{state.urls.map( (team:string, index:number) => {
+			{state.urls.map( (team, index) => {
 				return(
 					<div key={index.toString()}>
-						<Table url={team}/>
+						<p> {team} </p>
 						<br></br>
 					</div>
 					);
@@ -30,4 +31,4 @@ function TableContainer (props:containerProps) {
 }
 
 
-export default TableContainer;
+export default TableContainerFunc;

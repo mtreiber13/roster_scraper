@@ -1,5 +1,6 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import "./Table.css"
+import useAxios from 'axios-hooks';
 
 interface tableProps {
 	url:string;
@@ -11,153 +12,85 @@ interface tableState {
 	rows:string[][];
 }
 
-class Table extends React.Component<tableProps,tableState> {
+interface apiRes {
+	"data":string[][];
+}
 
-   	constructor(props:tableProps) {
-      	super(props) 
-      	this.state = { 
-      		url: this.props.url,
+function Table (props:tableProps) {
+
+   	const [state, setState] = useState<tableState>({ 
+      		url: props.url,
       		headers: [],
       		rows: [],
-      }
-      this.getTableData()
-   }
+      })
 
-   renderTableData() {
-      	return this.state.rows.map((player, index) => {
+
+   const [{ data, loading, error}] = useAxios({
+		url: 'http://localhost:2999/get_roster_data',
+		method: 'POST',
+		headers: {
+			'Access-Control-Allow-Origin': '*',
+			'Accept': 'application/json',
+			'Content-Type': 'application/json'
+		},
+		data: {"value": state.url}
+	})
+
+   function renderTableData(rows:string[][]) {
+      	return rows.map((player, index) => {
          	return (
-	         	<tr>{
+	         	<tr key={index}>{
 		         	player.map((data, index) => {
-		               return (<td>{data}</td>);
+		               return (<td key={index}>{data}</td>);
 		           	})
 		         }</tr>
       		);
          })
    }
 
-   renderTableHeader() {
-      let header = this.state.headers
+   function renderTableHeader(header:string[]) {
       return header.map((key, index) => {
-         return <th key={key}>{key.toUpperCase()}</th>
+         return <th key={index}>{key.toUpperCase()}</th>
       })
    }
 
 
-   async getTableData() {
-   		await fetch('http://localhost:2999/get_roster_data', {
-  			method: 'POST',
-  			headers: {
-  				'Access-Control-Allow-Origin': '*',
-  				'Accept': 'application/json',
-    			'Content-Type': 'application/json'
-  			},
-  			body: JSON.stringify({"value": this.state.url})
-  		})
-  			.then(async (response) => {
-  				if (response.ok) {
-  					await response.json().then(json => {
-  						console.log("FROM TABLE = " + JSON.stringify(json.data))
-  						if (json.data === []) {
-  							this.setState({
-	  							headers: [],
-	  							rows: [],
-  							})
-  						} else {
-  							this.setState({
-  								headers: json.data[0],
-  								rows: json.data.splice(1),
-  							})
-  						}
-  					})
-  				}
-  			})
-			.catch((e) => console.log("ERROR: " + e))
-		console.log("OUTSIDE FETCH")
-
+   function createTable (rosterData:apiRes) {
+   		try{
+   			return (
+   				<table>
+		   			<tbody>
+			   			<tr className="Headers">{renderTableHeader(rosterData['data'][0])}</tr>
+		               		{renderTableData(rosterData['data'].splice(1))}
+			    	</tbody>  
+			    </table>     
+	    	);
+   		} catch (err) {
+   			return (
+   				<p> {JSON.stringify(error)} </p>
+   				);
+   		}
+	   	
    }
-
-   createTable () {
+   
+   if (loading) {
    	return (
-   			<tbody>
-	   			<tr className="Headers">{this.renderTableHeader()}</tr>
-	                  {this.renderTableData()}
-	      	</tbody>       
-        );
+   		<div>
+   			<p> LOADING {state.url} </p>
+   		</div>
+   	)
    }
-
-	render() {
-	      try{
-	      	return (
-	        	<div>
-	            	<table className='Table'>
-	               			{this.createTable()}
-	            	</table>
-	         	</div>
-	      	)
-	      } catch (err) {
-	      	return(
-	      		<div>
-	            	<p>
-	            		{err.toString()}
-	            	</p>
-	         	</div>
-	         	);
-	      }
+   if (error) {
+   	return (
+   		<div>
+   			<p> ERROR: {error.toString()} </p>
+   		</div>
+   	)
    }
+   return (
+   		createTable(data)
+   		
+   )
 }
 
 export default Table;
-
-// export interface column {
-// 	title: string;
-//     dataIndex: string;
-//     key: string;
-//     width: number;
-// }
-
-// export interface row {
-// 	[key:string]: string
-// }
-
-// function createColumns(colNames:string[]) {
-// 	let cols:column[] = []
-// 	for (let i = 0; i < colNames.length; i++) {
-// 		let newCol:column = {
-// 			title: colNames[i],
-// 			dataIndex: colNames[i],
-// 			key: colNames[i],
-// 			width: 100
-// 		}
-// 		cols.push(newCol)
-// 	}
-// 	return cols;
-// }
-
-// function createRows(data:string[][]) {
-// 	let colIds:string[] = data[0]
-// 	let rows:row[] = []
-// 	for (let i = 1; i < data.length; i++) {
-// 		let newRow:row = {}
-// 		for (let j = 0; j < colIds.length; j++) {
-// 			newRow[colIds[j]] = data[i][j]
-// 		}
-// 		rows.push(newRow)
-// 	}
-// 	return rows;
-// }
-
-
-// // function createTable(data:string[][]) {
-// // 	let cols:column[] = createColumns(data[0])
-// // 	let rows:row[] = createRows(data)
-// // 	return (
-// // 		<div className="Tables">
-// // 			<Table columns={cols} data={rows} />
-// // 		</div>
-// // 	);
-// // }
-
-// module.exports = {
-// 	createColumns,				createRows,
-// 	createTable
-// }

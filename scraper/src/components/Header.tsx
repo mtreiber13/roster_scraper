@@ -8,10 +8,8 @@ export interface HeaderElems {
 	logo: string;
 }
 
-class Header extends React.Component<HeaderElems, {}> {
-  render() {
-	  const {title, name, logo} = this.props
-
+function Header (props:HeaderElems) {
+	const {title, name, logo} = props
 	  return (
 	    <div className="Header">
 	      <div className="Header-title">
@@ -25,7 +23,6 @@ class Header extends React.Component<HeaderElems, {}> {
 	      </div>
 	    </div>
 	  );
-	}
 }
 
 export default Header;
