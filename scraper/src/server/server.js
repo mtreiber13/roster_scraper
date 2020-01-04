@@ -85,7 +85,7 @@ app.post("/get_roster_data", function (req, res) { return __awaiter(void 0, void
             case 2:
                 rosterData = _a.sent();
                 console.log("++ Finished /get_roster_data API call");
-                res.json({ "data": rosterData });
+                res.json(rosterData);
                 return [3 /*break*/, 4];
             case 3:
                 err_2 = _a.sent();

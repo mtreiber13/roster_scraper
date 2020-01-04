@@ -61,7 +61,7 @@ function findTeamUrls(rawHTML) {
 }
 function getTeamPages(url) {
     return __awaiter(this, void 0, void 0, function () {
-        var goodUrl, raw, hrefJSON, urls, key, path;
+        var goodUrl, raw, hrefJSON, urls, key, path, newUrls;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, createValidUrl(url)];
@@ -82,16 +82,21 @@ function getTeamPages(url) {
                         catch (_b) {
                         }
                     }
-                    return [2 /*return*/, urls];
+                    newUrls = [];
+                    urls.map(function (x) {
+                        if (!newUrls.includes(x)) {
+                            newUrls.push(x);
+                        }
+                    });
+                    return [2 /*return*/, newUrls];
             }
         });
     });
 }
-//--------------------------- for specific rosters ----------------------------
 function scrapeRosterGrid(url, numColumns) {
     if (numColumns === void 0) { numColumns = 4; }
     return __awaiter(this, void 0, void 0, function () {
-        var goodUrl, raw, $, rows, players;
+        var goodUrl, raw, $, rows, players, title, resp;
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0: return [4 /*yield*/, createValidUrl(url)];
@@ -111,7 +116,12 @@ function scrapeRosterGrid(url, numColumns) {
                         }
                         players.push(data);
                     });
-                    return [2 /*return*/, players.filter(function (p) { return (p.length >= numColumns); })];
+                    title = $('h2').eq(0).text();
+                    resp = {
+                        players: players.filter(function (p) { return (p.length >= numColumns); }),
+                        title: title
+                    };
+                    return [2 /*return*/, resp];
             }
         });
     });

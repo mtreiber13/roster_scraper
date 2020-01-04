@@ -32,13 +32,16 @@ app.post("/get_teams", async (req:any, res:any) => {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
 	}
 })
-
+interface rosterResponse {
+	players:string[][];
+	title:string
+}
 app.post("/get_roster_data", async (req:any, res:any) => {
 	const url = req.body.value
 	try{
-		let rosterData:string[][] = await scraper.scrapeRosterGrid(url)
+		let rosterData:rosterResponse = await scraper.scrapeRosterGrid(url)
 		console.log("++ Finished /get_roster_data API call")
-		res.json({"data": rosterData})
+		res.json(rosterData)
 	} catch (err) {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
 	}

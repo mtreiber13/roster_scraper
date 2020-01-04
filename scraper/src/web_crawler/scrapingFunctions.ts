@@ -30,10 +30,20 @@ async function getTeamPages(url:string) {
 		} catch {
 		}
 	}
-	return urls;
+	let newUrls:string[] = []
+	urls.map((x) => {
+		if (!newUrls.includes(x)) {
+			newUrls.push(x)
+		}
+	})
+	return newUrls;
 }
 
 //--------------------------- for specific rosters ----------------------------
+interface rosterResponse {
+	players:string[][];
+	title:string
+}
 async function scrapeRosterGrid(url:string, numColumns:number=4) {
 	let goodUrl = await createValidUrl(url)
 	let raw = await cheer.getRawHTML(goodUrl)
@@ -48,7 +58,12 @@ async function scrapeRosterGrid(url:string, numColumns:number=4) {
 		}
 		players.push(data)
 	})
-	return players.filter( (p) => (p.length >= numColumns));
+	let title:string = $('h2').eq(0).text()
+	let resp:rosterResponse = {
+		players: players.filter( (p) => (p.length >= numColumns)),
+		title: title
+	}
+	return resp;
 }
 
 
