@@ -9,7 +9,11 @@ table, th, tr, td {
     table-layout: fixed;
 }
 
+p {
+	color: white;
+}
 
-/*.Headers {
-  border: 1px solid black;
-}*/
+
+th {
+	background-color: grey;
+}
