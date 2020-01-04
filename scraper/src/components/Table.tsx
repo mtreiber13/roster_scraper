@@ -54,16 +54,20 @@ function Table (props:tableProps) {
       })
    }
 
-
-   function createTable (rosterData:apiRes) {
+	interface rosterResponse {
+		players:string[][];
+		title:string
+	}
+   function createTable (rosterData:rosterResponse) {
    		try{
    			return (
-   				<table>
-		   			<tbody>
-			   			<tr className="Headers">{renderTableHeader(rosterData['data'][0])}</tr>
-		               		{renderTableData(rosterData['data'].splice(1))}
-			    	</tbody>  
-			    </table>     
+	   			
+	   				<table>
+			   			<tbody>
+				   			<tr className="Headers">{renderTableHeader(rosterData['players'][0])}</tr>
+			               		{renderTableData(rosterData['players'].splice(1))}
+				    	</tbody>  
+				    </table>   
 	    	);
    		} catch (err) {
    			return (
@@ -88,7 +92,10 @@ function Table (props:tableProps) {
    	)
    }
    return (
-   		createTable(data)
+   		<div>
+	   		<h2> {data['title']} </h2>
+   			{createTable(data)}
+   		</div>
    		
    )
 }
