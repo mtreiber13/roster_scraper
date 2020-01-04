@@ -40,7 +40,7 @@ var express = require("express");
 var pup = require("../web_crawler/pupFunctions");
 var bodyParser = require('body-parser');
 var cors = require("cors");
-var scraper = require("../web_crawler/siteScraper");
+var scraper = require("../web_crawler/scrapingFunctions");
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -49,41 +49,49 @@ app.get("/", function (req, res) {
     console.log("responding to root get");
     res.send("API is working at root");
 });
-app.post("/start_scrape", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, _a, browser, page, links, err_1;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
+app.post("/get_teams", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, teamLinks, err_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
             case 0:
                 url = req.body.value;
-                return [4 /*yield*/, pup.setUp(pup.options)];
+                _a.label = 1;
             case 1:
-                _a = _b.sent(), browser = _a[0], page = _a[1];
-                _b.label = 2;
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, scraper.getTeamPages(url)];
             case 2:
-                _b.trys.push([2, 7, , 8]);
-                return [4 /*yield*/, pup.goTo(page, url)];
+                teamLinks = _a.sent();
+                console.log("++ Finished /get_teams API call");
+                res.json({ "teams": teamLinks });
+                return [3 /*break*/, 4];
             case 3:
-                _b.sent();
-                return [4 /*yield*/, page.waitFor(40000)];
-            case 4:
-                _b.sent();
-                return [4 /*yield*/, scraper.getSportLinks(page)];
-            case 5:
-                links = _b.sent();
-                console.log("GOT LINKS");
-                return [4 /*yield*/, page.waitFor(40000)];
-            case 6:
-                _b.sent();
-                res.send(links);
-                return [3 /*break*/, 8];
-            case 7:
-                err_1 = _b.sent();
+                err_1 = _a.sent();
                 res.send("ERROR: " + err_1 + "\nBAD URL = " + url + "\n");
-                return [3 /*break*/, 8];
-            case 8: return [4 /*yield*/, pup.shutDown(browser)];
-            case 9:
-                _b.sent();
-                return [2 /*return*/];
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
+        }
+    });
+}); });
+app.post("/get_roster_data", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var url, rosterData, err_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                url = req.body.value;
+                _a.label = 1;
+            case 1:
+                _a.trys.push([1, 3, , 4]);
+                return [4 /*yield*/, scraper.scrapeRosterGrid(url)];
+            case 2:
+                rosterData = _a.sent();
+                console.log("++ Finished /get_roster_data API call");
+                res.json({ "data": rosterData });
+                return [3 /*break*/, 4];
+            case 3:
+                err_2 = _a.sent();
+                res.send("ERROR: " + err_2 + "\nBAD URL = " + url + "\n");
+                return [3 /*break*/, 4];
+            case 4: return [2 /*return*/];
         }
     });
 }); });
