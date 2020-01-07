@@ -5,7 +5,7 @@ const puppeteer = require('puppeteer');
 
 // prefered options for puppeteer
 const options = {
-    headless: false, // run in headless mode
+    headless: true, // run in headless mode
     ignoreHTTPSErrors: true, // self explantory
     pipe: true,     // use pipes instead of websocket (no dev port opened)
     slowMo: 100,    // slow down the process slightly for clipping issues

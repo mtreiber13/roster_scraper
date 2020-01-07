@@ -12,7 +12,7 @@ interface formState {
 
 function FormFunc () {
 
-	const [state, setTheState] = useState<formState>({
+	const [state, setState] = useState<formState>({
 		value: '',
 		showData: false,
 		teamUrls: []
@@ -30,7 +30,7 @@ function FormFunc () {
   		}, {manual:true})
 
 	function handleChange(event:any) {
-		setTheState({
+		setState({
 			value: event.target.value,
 			showData: state.showData,
 			teamUrls: state.teamUrls
@@ -41,60 +41,29 @@ function FormFunc () {
 		event.persist()
 		event.preventDefault();
 		refetch();
-		setTheState({
+		setState({
 			value: event.target.value,
 			showData: true,
 			teamUrls: data['teams']
 		});
 	}
 
-	if (loading) {
-		return(
-			<div className="FormData">
-				<div className="Form">
-					<form onSubmit={handleSubmit}>
-			        	<p>Enter the school's athletics URL:</p>
-			        	<input type="text" value={state.value} onChange={handleChange} />
-			        	<br></br>
-			        	<input type="submit" value="Submit"/>
-			      	</form>
-			    </div>
-			    <h6> LOADING </h6>
+	return (
+		<div className="FormData">
+			<div className="Form">
+				<form onSubmit={handleSubmit}>
+		        	<p>Enter the school's athletics URL:</p>
+		        	<input type="text" value={state.value} onChange={handleChange} />
+		        	<br></br>
+		        	<input type="submit" value="Submit"/>
+		      	</form>
+		    </div>
+		    <div className="Tables">
+				{loading ? <TableContainer urls={state.teamUrls}/> : <p>LOADING</p>}
 			</div>
-		);
-	} else if (error) {
-		return (
-			<div className="FormData">
-				<div className="Form">
-					<form onSubmit={handleSubmit}>
-			        	<p>Enter the school's athletics URL:</p>
-			        	<input type="text" value={state.value} onChange={handleChange} />
-			        	<br></br>
-			        	<input type="submit" value="Submit"/>
-			      	</form>
-			    </div>
-			    <h6> {JSON.stringify(error)} </h6>
-			</div>
-		);
-	} else {
-		console.log(data)
-		return (
-			<div className="FormData">
-				<div className="Form">
-					<form onSubmit={handleSubmit}>
-			        	<p>Enter the school's athletics URL:</p>
-			        	<input type="text" value={state.value} onChange={handleChange} />
-			        	<br></br>
-			        	<input type="submit" value="Submit"/>
-			      	</form>
-			    </div>
-			    <div className="Tables">
-					<TableContainer urls={state.teamUrls}/>
-				</div>
-			</div>
-		);
+		</div>
+	);
 		
-	}
 }
 
 
