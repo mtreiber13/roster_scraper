@@ -38,7 +38,8 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var cheerio = require("cheerio");
 var request = require("request");
-var cheer = require("./cheerioLib.js");
+var cheer = require("./cheerioLib");
+var pup = require("./pupScraper");
 //--------------------------- core functions ----------------------------
 function createValidUrl(url) {
     return __awaiter(this, void 0, void 0, function () {
@@ -117,8 +118,15 @@ function scrapeRosterGrid(url, numColumns) {
                         players.push(data);
                     });
                     title = $('h2').eq(0).text();
+                    players = players.filter(function (p) { return (p.length >= numColumns); });
+                    if (!(players.length == 0)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, pup.pupScrape(goodUrl)];
+                case 3:
+                    players = _a.sent();
+                    _a.label = 4;
+                case 4:
                     resp = {
-                        players: players.filter(function (p) { return (p.length >= numColumns); }),
+                        players: players,
                         title: title
                     };
                     return [2 /*return*/, resp];

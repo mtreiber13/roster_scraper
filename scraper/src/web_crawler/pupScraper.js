@@ -35,49 +35,48 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-var __spreadArrays = (this && this.__spreadArrays) || function () {
-    for (var s = 0, i = 0, il = arguments.length; i < il; i++) s += arguments[i].length;
-    for (var r = Array(s), k = 0, i = 0; i < il; i++)
-        for (var a = arguments[i], j = 0, jl = a.length; j < jl; j++, k++)
-            r[k] = a[j];
-    return r;
-};
 exports.__esModule = true;
-var pup = require("../web_crawler/pupFunctions");
-function getSportLinks(page) {
+var pup = require("./pupFunctions.js");
+function getHTML(page) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
             switch (_a.label) {
-                case 0:
-                    console.log("++ Getting links");
-                    return [4 /*yield*/, page.evaluate(function () {
-                            var htmlColl = document.forms;
-                            try {
-                                htmlColl = document.querySelectorAll('[aria-label="Teams"]')[0].children;
-                            }
-                            catch (_a) {
-                                console.log("** Did not find any teams using `aria-label=\"Teams\"");
-                                return ["SOME ERROR"];
-                                try {
-                                    htmlColl = document.querySelectorAll('[aria-label="Sports"]')[0].children;
-                                }
-                                catch (_b) {
-                                    console.log("** Did not find any teams using `aria-label=\"Sports\"");
-                                    return ["SOME ERROR"];
-                                }
-                            }
-                            return __spreadArrays(htmlColl).map(function (x) {
-                                if (undefined == x.children[2]) {
-                                    return undefined;
-                                }
-                                else {
-                                    return x.children[2].href;
-                                }
-                            }).filter(function (x) { return x != undefined; });
-                        })];
+                case 0: return [4 /*yield*/, page.evaluate(function () { return document.body.innerHTML; })];
                 case 1: return [2 /*return*/, _a.sent()];
             }
         });
     });
 }
-exports.getSportLinks = getSportLinks;
+function pupScrape(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var _a, browser, page, players;
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0: return [4 /*yield*/, pup.setUp(pup.options)];
+                case 1:
+                    _a = _b.sent(), browser = _a[0], page = _a[1];
+                    return [4 /*yield*/, pup.goTo(page, url)];
+                case 2:
+                    _b.sent();
+                    return [4 /*yield*/, page.waitFor(2000)];
+                case 3:
+                    _b.sent();
+                    return [4 /*yield*/, page.evaluate(function () {
+                            var players = Array.from($('table#DataTables_Table_0').find('tr')).map(function (x) {
+                                return Array.from(x.children).map(function (y) { return y.innerText; });
+                            });
+                            return players;
+                        })];
+                case 4:
+                    players = _b.sent();
+                    return [4 /*yield*/, pup.shutDown(browser)];
+                case 5:
+                    _b.sent();
+                    return [2 /*return*/, players];
+            }
+        });
+    });
+}
+module.exports = {
+    pupScrape: pupScrape
+};

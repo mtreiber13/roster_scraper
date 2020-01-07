@@ -1,7 +1,7 @@
 const cheerio = require("cheerio")
 const request = require("request")
-const cheer = require("./cheerioLib.js")
-
+const cheer = require("./cheerioLib")
+const pup = require("./pupScraper")
 
 
 //--------------------------- core functions ----------------------------
@@ -59,8 +59,12 @@ async function scrapeRosterGrid(url:string, numColumns:number=4) {
 		players.push(data)
 	})
 	let title:string = $('h2').eq(0).text()
+	players = players.filter( (p) => (p.length >= numColumns))
+	if (players.length == 0){
+		players = await pup.pupScrape(goodUrl)
+	}
 	let resp:rosterResponse = {
-		players: players.filter( (p) => (p.length >= numColumns)),
+		players: players,
 		title: title
 	}
 	return resp;

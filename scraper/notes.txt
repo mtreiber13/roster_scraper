@@ -1,0 +1,8 @@
+Notes for Sean - 1/6/18
+
+- Have yet to use TypeScript to make everything very pretty, wanted
+	to make it work frist
+- The website hides the ID when you curl to it to get the HTML.
+	This means I cannot only grabs the rows from the disired table, 
+	I grab all rows on the page. Right now, I am taking the rows 
+	that have more than 3 fields, this breaks for some of the teams.
