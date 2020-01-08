@@ -124,7 +124,7 @@ function pupScrape(url) {
                     _b.sent(); // extra buffer to allow page to load -> this might break if connection is bad and more time is needed
                     return [4 /*yield*/, page.evaluate(function () {
                             var players = Array.from($('table#DataTables_Table_0').find('tr')).map(function (x) {
-                                return Array.from(x.children).map(function (y) { return y.innerText; });
+                                return Array.from(x.children).map(function (y) { return y.innerText; }); // not sure how to get this any out
                             });
                             return players;
                         })];

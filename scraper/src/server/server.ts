@@ -1,10 +1,11 @@
-const express = require("express");
 const bodyParser = require('body-parser');
 const cors = require("cors")
 const scraper = require("../web_crawler/scrapingFunctions")
+const express = require("express")
+import {Application, Response, Request} from "express";
 
 
-const app = express()
+const app:Application = express()
 
 
 app.use(bodyParser.json()); // for parsing application/json
@@ -12,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 app.use(cors())
 
 // for testing purposes
-app.get("/", (req:any, res:any) => {
+app.get("/", (req:Request, res:Response) => {
 	console.log("responding to root get")
 	res.send("API is working at root")
 });
@@ -22,7 +23,7 @@ app.get("/", (req:any, res:any) => {
 interface teamsObj {
 	[key:string]: string[]
 }
-app.post("/get_teams", async (req:any, res:any) => {
+app.post("/get_teams", async (req:Request, res:Response) => {
 	const url = req.body.value
 	try {
 		let teamLinks:string[] = await scraper.getTeamPages(url)
@@ -39,7 +40,7 @@ interface rosterResponse {
 	players:string[][];
 	title:string
 }
-app.post("/get_roster_data", async (req:any, res:any) => {
+app.post("/get_roster_data", async (req:Request, res:Response) => {
 	const url = req.body.value
 	try{
 		let rosterData:rosterResponse = await scraper.scrapeRosterGrid(url)
@@ -57,4 +58,4 @@ app.listen(2999, () => {
 })
 
 
-export {};
+export default app;

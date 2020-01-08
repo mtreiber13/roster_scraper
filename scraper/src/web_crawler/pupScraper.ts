@@ -5,6 +5,7 @@
 
 // import the needed libraries
 const puppeteer = require('puppeteer');
+import {Page, Browser} from 'puppeteer';
 
 // prefered options for puppeteer
 interface pupOptions {
@@ -32,7 +33,7 @@ async function setUp() {
 
 // shuts down puppeteer operations 
 // browser = puppeteer object   
-async function shutDown(browser:any){
+async function shutDown(browser:Browser){
     await browser.close();
     console.log('-- Closed Browser')
 }
@@ -45,7 +46,7 @@ interface pupReturn {
 // gets url from the page puppeteer object
 // input: page object
 // output: the HTML of the current page location
-async function getHTML(page:any) {
+async function getHTML(page:Page) {
 	return await page.evaluate(() => document.body.innerHTML);
 }
 
@@ -62,7 +63,7 @@ async function pupScrape(url:string) {
 	// scrape the roster data
 	let players:string[][] = await page.evaluate( () => {
 		let players:string[][] = Array.from($('table#DataTables_Table_0').find('tr')).map( (x) => {
-    		return Array.from(x.children).map( (y:any) => y.innerText)
+    		return Array.from(x.children).map( (y:any) => y.innerText) // not sure how to get this any out
 		})	
     	return players
 	})

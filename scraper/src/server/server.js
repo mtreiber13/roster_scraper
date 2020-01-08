@@ -36,10 +36,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var express = require("express");
 var bodyParser = require('body-parser');
 var cors = require("cors");
 var scraper = require("../web_crawler/scrapingFunctions");
+var express = require("express");
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
@@ -100,3 +100,4 @@ app.set('port', process.env.PORT || 2999);
 app.listen(2999, function () {
     console.log("++ Server is running");
 });
+exports["default"] = app;
