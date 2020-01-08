@@ -2,9 +2,9 @@
 const cheerio = require("cheerio")
 var request = require('request');
 
-var delayInMilliseconds = 3000; //1 second
-
-
+// essentially curls to get the HTML from roster page
+// input: url to page
+// output: raw HTML of page
 function getRawHTML(url) {
 	return new Promise((resolve, reject) => {
 		return request(
@@ -18,6 +18,8 @@ function getRawHTML(url) {
 	})
 }
 
+// gets the response URL of a request
+// 		used when creating a scrapable URL to give to roster scraper
 function getResponseHref(url) {
 	return new Promise((resolve, reject) => {
 		request(
@@ -32,6 +34,9 @@ function getResponseHref(url) {
 	
 }
 
+// creates cheerio object
+// input: raw HTML
+// output: cheerio object
 function createCheerio(rawHTML) {
 	return cheerio.load(rawHTML)
 }

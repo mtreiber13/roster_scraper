@@ -1,5 +1,9 @@
 Notes for Sean - 1/6/18
 
+TODOS:
+1.	Make libraries TS
+2. 	Make sure there are no "any" types in the code
+
 - Have yet to use TypeScript to make everything very pretty, wanted
 	to make it work frist
 - The website hides the ID when you curl to it to get the HTML.

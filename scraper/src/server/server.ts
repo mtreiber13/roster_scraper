@@ -1,5 +1,4 @@
 const express = require("express");
-const pup = require("../web_crawler/pupFunctions")
 const bodyParser = require('body-parser');
 const cors = require("cors")
 const scraper = require("../web_crawler/scrapingFunctions")
@@ -12,16 +11,17 @@ app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors())
 
+// for testing purposes
 app.get("/", (req:any, res:any) => {
 	console.log("responding to root get")
 	res.send("API is working at root")
 });
 
-
+// gets the team urls for a school
+// responds json with list of all team URLS
 interface teamsObj {
 	[key:string]: string[]
 }
-
 app.post("/get_teams", async (req:any, res:any) => {
 	const url = req.body.value
 	try {
@@ -32,6 +32,9 @@ app.post("/get_teams", async (req:any, res:any) => {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
 	}
 })
+
+// gets the data for a single roster page
+// responds with a json containing the name of the roster and the player data
 interface rosterResponse {
 	players:string[][];
 	title:string
@@ -47,8 +50,8 @@ app.post("/get_roster_data", async (req:any, res:any) => {
 	}
 })
 
+// sets the port to 29999 (react runs on 3000)
 app.set('port', process.env.PORT || 2999);
-
 app.listen(2999, () => {
 	console.log("++ Server is running")
 })
