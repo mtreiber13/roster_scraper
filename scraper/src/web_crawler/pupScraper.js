@@ -1,4 +1,8 @@
 "use strict";
+// This file contains the scraper for teams that have less than 
+// 4 columns of data. This function is only called when needed
+// as this scraping method is slower and has a higher tedency of
+// breaking.
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -36,7 +40,54 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 exports.__esModule = true;
-var pup = require("./pupFunctions.js");
+// import the needed libraries
+var puppeteer = require('puppeteer');
+var options = {
+    headless: true,
+    ignoreHTTPSErrors: true,
+    pipe: true,
+    slowMo: 100
+};
+// does the puppeteer set up (creates browser, page)
+// open browser and go to page, wait for it to load
+function setUp() {
+    return __awaiter(this, void 0, void 0, function () {
+        var browser, page;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, puppeteer.launch(options)];
+                case 1:
+                    browser = _a.sent();
+                    return [4 /*yield*/, browser.newPage()];
+                case 2:
+                    page = _a.sent();
+                    return [4 /*yield*/, page.setViewport({ width: 1500, height: 1100 })];
+                case 3:
+                    _a.sent();
+                    console.log('-- Started Browser');
+                    return [2 /*return*/, [browser, page]];
+            }
+        });
+    });
+}
+// shuts down puppeteer operations 
+// browser = puppeteer object   
+function shutDown(browser) {
+    return __awaiter(this, void 0, void 0, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, browser.close()];
+                case 1:
+                    _a.sent();
+                    console.log('-- Closed Browser');
+                    return [2 /*return*/];
+            }
+        });
+    });
+}
+// gets url from the page puppeteer object
+// input: page object
+// output: the HTML of the current page location
 function getHTML(page) {
     return __awaiter(this, void 0, void 0, function () {
         return __generator(this, function (_a) {
@@ -47,20 +98,30 @@ function getHTML(page) {
         });
     });
 }
+// scrapes all roster data from any roster page that is found in
+// on the print screen
+// input: url to roster (in print form)
+// output: string[][] 
 function pupScrape(url) {
     return __awaiter(this, void 0, void 0, function () {
         var _a, browser, page, players;
         return __generator(this, function (_b) {
             switch (_b.label) {
-                case 0: return [4 /*yield*/, pup.setUp(pup.options)];
+                case 0: return [4 /*yield*/, setUp()
+                    // go to the desired URL
+                ];
                 case 1:
                     _a = _b.sent(), browser = _a[0], page = _a[1];
-                    return [4 /*yield*/, pup.goTo(page, url)];
+                    // go to the desired URL
+                    return [4 /*yield*/, page.goto(url)];
                 case 2:
+                    // go to the desired URL
                     _b.sent();
-                    return [4 /*yield*/, page.waitFor(2000)];
+                    return [4 /*yield*/, page.waitFor(2000)
+                        // scrape the roster data
+                    ]; // extra buffer to allow page to load -> this might break if connection is bad and more time is needed
                 case 3:
-                    _b.sent();
+                    _b.sent(); // extra buffer to allow page to load -> this might break if connection is bad and more time is needed
                     return [4 /*yield*/, page.evaluate(function () {
                             var players = Array.from($('table#DataTables_Table_0').find('tr')).map(function (x) {
                                 return Array.from(x.children).map(function (y) { return y.innerText; });
@@ -69,7 +130,7 @@ function pupScrape(url) {
                         })];
                 case 4:
                     players = _b.sent();
-                    return [4 /*yield*/, pup.shutDown(browser)];
+                    return [4 /*yield*/, shutDown(browser)];
                 case 5:
                     _b.sent();
                     return [2 /*return*/, players];
@@ -78,5 +139,5 @@ function pupScrape(url) {
     });
 }
 module.exports = {
-    pupScrape: pupScrape
+    pupScrape: pupScrape, getHTML: getHTML
 };

@@ -27,6 +27,7 @@ class Form extends React.Component<{}, formState> {
 	  	this.scrape = this.scrape.bind(this);
 	}
 
+	// gets the team URLs from the api
 	async scrape () {
 		await fetch('http://localhost:2999/get_teams', {
   			method: 'POST',
@@ -50,12 +51,12 @@ class Form extends React.Component<{}, formState> {
 			.catch((e) => console.log("ERROR: " + e))
 	}
 
+	// constantly updates the value based on input
 	handleChange(event:any) {
 		this.setState({value: event.target.value});
-
-		// console.log(this.state)
 	}
 
+	// handles the submit button, makes call to scraper
 	async handleSubmit(event:any) {
 		event.persist()
 		event.preventDefault();

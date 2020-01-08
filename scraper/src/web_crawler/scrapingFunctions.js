@@ -40,7 +40,10 @@ var cheerio = require("cheerio");
 var request = require("request");
 var cheer = require("./cheerioLib");
 var pup = require("./pupScraper");
-//--------------------------- core functions ----------------------------
+// converts a roster url that was scraped from home to page to 
+// one that can be used to scrape roster data
+// input: url to a specific team
+// output: url to print page of roster to be scraped
 function createValidUrl(url) {
     return __awaiter(this, void 0, void 0, function () {
         var newUrl;
@@ -54,11 +57,12 @@ function createValidUrl(url) {
         });
     });
 }
-//--------------------------- for overall college ----------------------------
+// scrapes the links to all teams on the school's page
+// input: school athletics url
+// output: string[] of urls to specific tems
 function findTeamUrls(rawHTML) {
     var $ = cheerio.load(rawHTML);
-    var teams = $('a[href*="/roster.aspx?path="]');
-    return teams;
+    return $('a[href*="/roster.aspx?path="]');
 }
 function getTeamPages(url) {
     return __awaiter(this, void 0, void 0, function () {
@@ -73,7 +77,7 @@ function getTeamPages(url) {
                     raw = _a.sent();
                     hrefJSON = findTeamUrls(raw);
                     urls = [];
-                    for (key in hrefJSON) {
+                    for (key in hrefJSON) { // create link with correct path
                         try {
                             path = hrefJSON[key]['attribs']['href'];
                             if (path != undefined) {
@@ -94,8 +98,7 @@ function getTeamPages(url) {
         });
     });
 }
-function scrapeRosterGrid(url, numColumns) {
-    if (numColumns === void 0) { numColumns = 4; }
+function scrapeRosterGrid(url) {
     return __awaiter(this, void 0, void 0, function () {
         var goodUrl, raw, $, rows, players, title, resp;
         return __generator(this, function (_a) {
@@ -107,8 +110,10 @@ function scrapeRosterGrid(url, numColumns) {
                 case 2:
                     raw = _a.sent();
                     $ = cheer.createCheerio(raw);
-                    rows = $('table').find('tr');
+                    rows = $('table').find('tr') // get all table rows -> table ID does not exist in curl
+                    ;
                     players = [];
+                    // get all rows from roster page
                     rows.each(function (index, value) {
                         var data = [];
                         var children = $(this).children();
@@ -118,7 +123,8 @@ function scrapeRosterGrid(url, numColumns) {
                         players.push(data);
                     });
                     title = $('h2').eq(0).text();
-                    players = players.filter(function (p) { return (p.length >= numColumns); });
+                    // filter out player rows
+                    players = players.filter(function (p) { return (p.length > 3); }); // hard coded b/c coaches have 3 columns, usually players have more
                     if (!(players.length == 0)) return [3 /*break*/, 4];
                     return [4 /*yield*/, pup.pupScrape(goodUrl)];
                 case 3:

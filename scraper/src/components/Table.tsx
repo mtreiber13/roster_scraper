@@ -61,7 +61,7 @@ function Table (props:tableProps) {
    function createTable (rosterData:rosterResponse) {
    		try{
    			return (
-	   			
+	   			// creates the table header and the table rows based on the response from the API (given in TableContainer)
 	   				<table>
 			   			<tbody>
 				   			<tr className="Headers">{renderTableHeader(rosterData['players'][0])}</tr>
@@ -69,12 +69,11 @@ function Table (props:tableProps) {
 				    	</tbody>  
 				    </table>   
 	    	);
-   		} catch (err) {
+   		} catch (err) {       // displayes error if there is one
    			return (
    				<p> {JSON.stringify(error)} </p>
    				);
    		}
-	   	
    }
    
    if (loading) {
