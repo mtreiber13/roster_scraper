@@ -1,6 +1,8 @@
 import * as React from 'react';
 import "./Form.css"
 import TableContainer from "./TableContainer"
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
 
 
 
@@ -68,12 +70,15 @@ class Form extends React.Component<{}, formState> {
 		return(
 			<div className="FormData">
 				<div className="Form">
+					<p>Enter the school's athletics URL:</p>
 					<form onSubmit={this.handleSubmit}>
-			        	<p>Enter the school's athletics URL:</p>
-			        	<input type="text" value={this.state.value} onChange={this.handleChange} />
+			        	<TextField id="outlined-basic" label="URL" variant="outlined" value={this.state.value} onChange={this.handleChange}/>
 			        	<br></br>
-			        	<input type="submit" value="Submit"/>
 			      	</form>
+			      	<br></br>
+			      	<Button variant="contained" color="primary" onClick={this.handleSubmit}>
+        				Get Athlete Data
+      				</Button>
 			    </div>
 			    <div className="Tables">
 			    	{ this.state.showData ? <TableContainer urls={this.state.teamUrls}/> : null }

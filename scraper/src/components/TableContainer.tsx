@@ -10,7 +10,7 @@ export interface containerProps {
 }
 
 function TableContainer (props:containerProps) {
-	const [state, setState] = useState<containerState>({ 
+	const [state] = useState<containerState>({ 
       		urls: props.urls
       })
 

@@ -18,7 +18,7 @@ interface apiRes {
 
 function Table (props:tableProps) {
 
-   	const [state, setState] = useState<tableState>({ 
+   	const [state] = useState<tableState>({ 
       		url: props.url,
       		headers: [],
       		rows: [],

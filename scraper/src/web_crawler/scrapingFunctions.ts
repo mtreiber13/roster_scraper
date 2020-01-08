@@ -1,3 +1,5 @@
+// contains two anys, coudlnt figure out how to make them be real types
+
 const cheerio = require("cheerio")
 const request = require("request")
 const cheer = require("./cheerioLib")
@@ -17,13 +19,13 @@ async function createValidUrl(url:string) {
 // input: school athletics url
 // output: string[] of urls to specific tems
 function findTeamUrls(rawHTML:string) {			// helper
-	let $:any = cheerio.load(rawHTML)
+	let $ = cheerio.load(rawHTML)
 	return $('a[href*="/roster.aspx?path="]')
 }
 async function getTeamPages(url:string) {
 	let goodUrl = await createValidUrl(url)		
 	let raw = await cheer.getRawHTML(goodUrl)
-	let hrefJSON:any = findTeamUrls(raw)
+	let hrefJSON = findTeamUrls(raw)
 	let urls:string[] = []
 	for (var key in hrefJSON) {		// create link with correct path
 		try {
@@ -57,9 +59,9 @@ async function scrapeRosterGrid(url:string) {
 	let raw = await cheer.getRawHTML(goodUrl)
 	let $ = cheer.createCheerio(raw)
 	let rows = $('table').find('tr') // get all table rows -> table ID does not exist in curl
-	let players:any[] = []
+	let players:any[] = [] 
 	// get all rows from roster page
-	rows.each(function (this:CheerioElement, index:number, value:any) {
+	rows.each(function (this:CheerioElement, index:number, value:CheerioElement) {
 		let data:string[] = []
 		let children:any = $(this).children()
 		for (let i = 0; i < children.length; i++) {
