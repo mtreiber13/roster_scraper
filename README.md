@@ -6,6 +6,9 @@ This is webscraper that has been built to scrape all data for every athlete on a
 * ReactJS
 * TypeScript
 * ExpressJS
+* Puppeteer
+* CheerioJS
+* MaterialUI
 
 # How to use
 1. Download the zip to your computer
