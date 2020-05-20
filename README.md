@@ -1,5 +1,11 @@
 # Collegiate Athlete Roster Scraper
-This is webscraper that has been built to scrape all data for every athlete on a given schools athletic page. It was built to scrape from websites built by Sidearm Sports. A list of all schools that can be scraped can be seen at https://www.sidearmsports.com/partners/.
+This is webscraper that has been built to scrape all data for every athlete on a given school's athletic page. It was built to scrape from websites built by Sidearm Sports. A list of all schools that can be scraped can be seen at https://www.sidearmsports.com/partners/.
+
+# Technologies Used
+* JavaScript
+* ReactJS
+* TypeScript
+* ExpressJS
 
 # How to use
 1. Download the zip to your computer
