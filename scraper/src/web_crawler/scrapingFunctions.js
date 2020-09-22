@@ -141,7 +141,36 @@ function scrapeRosterGrid(url) {
         });
     });
 }
+function scrapeImageUrls(url) {
+    return __awaiter(this, void 0, void 0, function () {
+        var newUrl, root, raw, $, rows, players;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0: return [4 /*yield*/, cheer.getResponseHref(url)];
+                case 1:
+                    newUrl = _a.sent();
+                    console.log(newUrl);
+                    root = newUrl.split('/sports')[0];
+                    return [4 /*yield*/, cheer.getRawHTML(url)];
+                case 2:
+                    raw = _a.sent();
+                    $ = cheer.createCheerio(raw);
+                    rows = $('img');
+                    players = [];
+                    rows.each(function (index, value) {
+                        var link = $(this)['0'].attribs['data-src'];
+                        if (link == undefined) {
+                            return;
+                        }
+                        players.push(root + link.split('?')[0]);
+                    });
+                    return [2 /*return*/, players];
+            }
+        });
+    });
+}
 module.exports = {
     getTeamPages: getTeamPages, scrapeRosterGrid: scrapeRosterGrid,
-    createValidUrl: createValidUrl, findTeamUrls: findTeamUrls
+    createValidUrl: createValidUrl, findTeamUrls: findTeamUrls,
+    scrapeImageUrls: scrapeImageUrls
 };

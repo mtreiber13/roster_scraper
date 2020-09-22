@@ -73,25 +73,46 @@ app.post("/get_teams", function (req, res) { return __awaiter(void 0, void 0, vo
     });
 }); });
 app.post("/get_roster_data", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var url, rosterData, err_2;
+    var url, rosterData, imgs_1, err_2, err_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 url = req.body.value;
                 _a.label = 1;
             case 1:
-                _a.trys.push([1, 3, , 4]);
+                _a.trys.push([1, 7, , 8]);
                 return [4 /*yield*/, scraper.scrapeRosterGrid(url)];
             case 2:
                 rosterData = _a.sent();
-                console.log("++ Finished /get_roster_data API call");
-                res.json(rosterData);
-                return [3 /*break*/, 4];
+                _a.label = 3;
             case 3:
+                _a.trys.push([3, 5, , 6]);
+                return [4 /*yield*/, scraper.scrapeImageUrls(url)];
+            case 4:
+                imgs_1 = _a.sent();
+                rosterData.players.map(function (x, i) {
+                    if (i == 0) {
+                        x.push('Image Url');
+                    }
+                    else {
+                        x.push(imgs_1[i - 1]);
+                    }
+                });
+                return [3 /*break*/, 6];
+            case 5:
                 err_2 = _a.sent();
-                res.send("ERROR: " + err_2 + "\nBAD URL = " + url + "\n");
-                return [3 /*break*/, 4];
-            case 4: return [2 /*return*/];
+                res.send("ERROR: " + err_2 + "\nDid not get images!");
+                return [3 /*break*/, 6];
+            case 6:
+                console.log("++ Finished /get_roster_data API call");
+                console.log(rosterData);
+                res.json(rosterData);
+                return [3 /*break*/, 8];
+            case 7:
+                err_3 = _a.sent();
+                res.send("ERROR: " + err_3 + "\nBAD URL = " + url + "\n");
+                return [3 /*break*/, 8];
+            case 8: return [2 /*return*/];
         }
     });
 }); });
@@ -100,4 +121,20 @@ app.set('port', process.env.PORT || 2999);
 app.listen(2999, function () {
     console.log("++ Server is running");
 });
+// const scraper = require("./scrapingFunctions")
+// async function runner() {
+// 	let grid = await scraper.scrapeRosterGrid('https://rolltide.com/roster.aspx?path=baseball')
+// 	let res = await scraper.scrapeImageUrls('https://rolltide.com/roster.aspx?path=baseball')
+// 	grid.players.map((x, i) => {
+// 		if(i == 0){
+// 			return
+// 		}
+// 		x.push(res[i-1])
+// 	})
+// 	console.log(grid)
+// }
+// async function tester(){
+// 	await runner()
+// }
+// tester()
 exports["default"] = app;

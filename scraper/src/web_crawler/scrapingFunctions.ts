@@ -84,9 +84,27 @@ async function scrapeRosterGrid(url:string) {
 	return resp;
 }
 
+async function scrapeImageUrls(url:string) {
+	let newUrl = await cheer.getResponseHref(url)
+	let root = newUrl.split('/sports')[0]
+	let raw = await cheer.getRawHTML(url)
+	let $ = cheer.createCheerio(raw)
+	let rows = $('img')
+	let players:string[] = [] 
+	rows.each(function (this:CheerioElement, index:number, value:CheerioElement) {
+		let link = $(this)['0'].attribs['data-src']
+		if(link == undefined){
+			return
+		}
+		players.push(root + link.split('?')[0])
+	})
+	return players
+}
+
 module.exports = {
 	getTeamPages, 			scrapeRosterGrid,
 	createValidUrl, 		findTeamUrls,
+	scrapeImageUrls
 
 
 };

@@ -44,7 +44,20 @@ app.post("/get_roster_data", async (req:Request, res:Response) => {
 	const url = req.body.value
 	try{
 		let rosterData:rosterResponse = await scraper.scrapeRosterGrid(url)
+		try {
+			let imgs:string[] = await scraper.scrapeImageUrls(url)
+			rosterData.players.map((x, i) => {
+				if(i == 0){
+					x.push('Image Url')
+				} else {
+					x.push(imgs[i-1])	
+				}
+			})
+		} catch (err) {
+			res.send("ERROR: " + err + "\nDid not get images!")
+		}
 		console.log("++ Finished /get_roster_data API call")
+		console.log(rosterData)
 		res.json(rosterData)
 	} catch (err) {
 		res.send("ERROR: " + err + "\nBAD URL = " + url + "\n")
@@ -57,5 +70,24 @@ app.listen(2999, () => {
 	console.log("++ Server is running")
 })
 
+// const scraper = require("./scrapingFunctions")
+
+// async function runner() {
+// 	let grid = await scraper.scrapeRosterGrid('https://rolltide.com/roster.aspx?path=baseball')
+	
+// 	let res = await scraper.scrapeImageUrls('https://rolltide.com/roster.aspx?path=baseball')
+// 	grid.players.map((x, i) => {
+// 		if(i == 0){
+// 			return
+// 		}
+// 		x.push(res[i-1])
+// 	})
+// 	console.log(grid)
+// }
+// async function tester(){
+// 	await runner()
+// }
+
+// tester()
 
 export default app;
