@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "start": "cd scraper; npm install;  npm start"
+    "start": "cd scraper; npm start"
   }
 }
