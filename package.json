@@ -1,5 +1,5 @@
 {
   "scripts": {
-    "start": "node scraper/src/server/server.js; node scraper/src/index.tsx"
+    "start": "cd scarper; npm install; cd ..; node scraper/src/server/server.js; node scraper/src/index.tsx"
   }
 }
