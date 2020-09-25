@@ -1,5 +1,6 @@
 {
   "scripts": {
-    "start": "cd scarper; npm install; cd ..; node scraper/src/server/server.js; node scraper/src/index.tsx"
-  }
+	  "start": "node scraper/src/server/server.js",
+	  "heroku-postbuild": "cd scraper && npm intall && npm install && npm run-script start-react"
+	}
 }
