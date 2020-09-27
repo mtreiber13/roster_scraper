@@ -1,6 +1,6 @@
 {
   "scripts": {
 	  "start": "cd scraper; npm install",
-	  "heroku-postbuild": " node src/server/server.js && npm install && npm run-script start-react"
+	  "heroku-postbuild": " node src/server/server.js && npm run-script start-react"
 	}
 }
