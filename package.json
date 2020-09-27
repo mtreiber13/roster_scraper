@@ -1,4 +1,10 @@
 {
+  "scripts": {
+	  "start": "npm install; node src/server/server.js",
+	  "heroku-postbuild": "npm run-script start-react"
+	}
+}
+{
   "name": "scraper",
   "version": "0.1.0",
   "private": true,
@@ -30,7 +36,9 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    "start": "tsc src/server/server.ts; node src/server/server.js & react-scripts start",
+    // "start": "tsc src/server/server.ts; node src/server/server.js & react-scripts start",
+    "start": "npm install; node src/server/server.js",
+	"heroku-postbuild": "npm run-script start-react",
     "start-server": "tsc src/server/server.ts; node src/server/server.js",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
