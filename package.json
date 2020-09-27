@@ -1,10 +1,4 @@
 {
-  "scripts": {
-	  "start": "npm install; node src/server/server.js",
-	  "heroku-postbuild": "npm run-script start-react"
-	}
-}
-{
   "name": "scraper",
   "version": "0.1.0",
   "private": true,
