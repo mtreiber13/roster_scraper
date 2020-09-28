@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "tsc src/server/server.ts; node src/server/server.js",
-    "heroku-postbuild": "npm install && react-scripts start",
+    "heroku-postbuild": "npm install && npm run build",
     "start-server": "tsc src/server/server.ts; node src/server/server.js",
     "start-react": "react-scripts start",
     "build": "react-scripts build",
