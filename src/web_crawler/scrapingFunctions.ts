@@ -61,7 +61,7 @@ async function scrapeRosterGrid(url:string) {
 	let rows = $('table').find('tr') // get all table rows -> table ID does not exist in curl
 	let players:any[] = [] 
 	// get all rows from roster page
-	rows.each(function (this:CheerioElement, index:number, value:CheerioElement) {
+	rows.each(function (this:any, index:number, value:any) {
 		let data:string[] = []
 		let children:any = $(this).children()
 		for (let i = 0; i < children.length; i++) {
