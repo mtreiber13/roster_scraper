@@ -31,7 +31,7 @@
   },
   "scripts": {
     
-    "start": "npm install; node src/server/server.js",
+    "start": "node src/server/server.js",
 	"heroku-postbuild": "npm run-script start-react",
     "start-server": "tsc src/server/server.ts; node src/server/server.js",
     "start-react": "react-scripts start",
