@@ -53,7 +53,7 @@ app.post("/get_roster_data", async (req:Request, res:Response) => {
 
 // sets the port to 29999 (react runs on 3000)
 app.set('port', process.env.PORT || 2999);
-app.listen(2999, () => {
+app.listen(process.env.PORT || 2999, () => {
 	console.log("++ Server is running")
 })
 
