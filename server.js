@@ -38,16 +38,19 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 exports.__esModule = true;
 var bodyParser = require('body-parser');
 var cors = require("cors");
-var scraper = require("../web_crawler/scrapingFunctions");
+var scraper = require("./src/web_crawler/scrapingFunctions");
 var express = require("express");
+var path = require('path');
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors());
+app.use(express.static(path.join(__dirname, 'build')));
 // for testing purposes
 app.get("/", function (req, res) {
     console.log("responding to root get");
-    res.send("API is working at root");
+    console.log(path.join(__dirname, 'build', 'index.html'));
+    res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 app.post("/get_teams", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
     var url, teamLinks, err_1;
@@ -97,7 +100,8 @@ app.post("/get_roster_data", function (req, res) { return __awaiter(void 0, void
 }); });
 // sets the port to 29999 (react runs on 3000)
 app.set('port', process.env.PORT || 2999);
-app.listen(2999, function () {
+app.listen(process.env.PORT || 2999, function () {
     console.log("++ Server is running");
+    console.log(__dirname);
 });
 exports["default"] = app;

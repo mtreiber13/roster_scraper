@@ -1,6 +1,6 @@
 const bodyParser = require('body-parser');
 const cors = require("cors")
-const scraper = require("../web_crawler/scrapingFunctions")
+const scraper = require("./src/web_crawler/scrapingFunctions")
 const express = require("express")
 const path = require('path');
 import {Application, Response, Request} from "express";
@@ -17,7 +17,8 @@ app.use(express.static(path.join(__dirname, 'build')));
 // for testing purposes
 app.get("/", (req:Request, res:Response) => {
 	console.log("responding to root get")
-	res.sendFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
+	console.log(path.join(__dirname, 'build', 'index.html'))
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // gets the team urls for a school
@@ -57,6 +58,7 @@ app.post("/get_roster_data", async (req:Request, res:Response) => {
 app.set('port', process.env.PORT || 2999);
 app.listen(process.env.PORT || 2999, () => {
 	console.log("++ Server is running")
+	console.log(__dirname)
 })
 
 
