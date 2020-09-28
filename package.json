@@ -30,14 +30,8 @@
     "typescript": "^3.7.4"
   },
   "scripts": {
-    
     "start": "node src/server/server.js",
-	"heroku-postbuild": "npm run-script start-react",
-    "start-server": "tsc src/server/server.ts; node src/server/server.js",
-    "start-react": "react-scripts start",
-    "build": "react-scripts build",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "heroku-postbuild": "npm run-script start-react"
   },
   "eslintConfig": {
     "extends": "react-app"
