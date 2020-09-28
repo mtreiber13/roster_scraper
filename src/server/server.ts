@@ -17,7 +17,7 @@ app.use(express.static(path.join(__dirname, 'build')));
 // for testing purposes
 app.get("/", (req:Request, res:Response) => {
 	console.log("responding to root get")
-	res.sendFile(path.join(__dirname, 'build', 'index.html'));
+	res.sendFile(path.join(__dirname, '..', '..', 'build', 'index.html'));
 });
 
 // gets the team urls for a school
