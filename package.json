@@ -33,7 +33,6 @@
     "start": "node src/server/server.js",
     "heroku-postbuild": "npm run-script start-react",
     "start-react": "react-scripts start",
-    "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
