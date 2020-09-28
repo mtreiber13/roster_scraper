@@ -2,6 +2,7 @@ const bodyParser = require('body-parser');
 const cors = require("cors")
 const scraper = require("../web_crawler/scrapingFunctions")
 const express = require("express")
+const path = require('path');
 import {Application, Response, Request} from "express";
 
 
@@ -11,11 +12,12 @@ const app:Application = express()
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
 app.use(cors())
+app.use(express.static(path.join(__dirname, 'build')));
 
 // for testing purposes
 app.get("/", (req:Request, res:Response) => {
 	console.log("responding to root get")
-	res.send("API is working at root")
+	res.sendFile(path.join(__dirname, 'build', 'index.html'));
 });
 
 // gets the team urls for a school
