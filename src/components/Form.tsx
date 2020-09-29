@@ -31,7 +31,7 @@ class Form extends React.Component<{}, formState> {
 
 	// gets the team URLs from the api
 	async scrape () {
-		await fetch('http://localhost:2999/get_teams', {
+		await fetch('https://matthew-treiber.herokuapp.com/get_teams', {
   			method: 'POST',
   			headers: {
   				'Access-Control-Allow-Origin': '*',

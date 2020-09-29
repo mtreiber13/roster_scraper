@@ -26,7 +26,7 @@ function Table (props:tableProps) {
 
 
    const [{ data, loading, error}] = useAxios({
-		url: 'http://localhost:2999/get_roster_data',
+		url: 'https://matthew-treiber.herokuapp.com/get_roster_data',
 		method: 'POST',
 		headers: {
 			'Access-Control-Allow-Origin': '*',
